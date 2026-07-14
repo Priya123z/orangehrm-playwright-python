@@ -1,0 +1,14 @@
+.venv/
+.idea/
+__pycache__/
+.pytest_cache/
+
+.env
+
+playwright-report/
+test-results/
+allure-results/
+allure-report/
+reports/
+screenshots/
+logs/
