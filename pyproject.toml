@@ -3,6 +3,7 @@ name = "orangehrm-playwright-python"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
+    "loguru>=0.7.3",
     "playwright>=1.61.0",
     "pytest>=9.1.1",
     "pytest-html>=4.2.0",

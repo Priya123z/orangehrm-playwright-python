@@ -1,5 +1,5 @@
 from playwright.sync_api import Page, expect
-
+from loguru import logger
 
 class BasePage:
 
@@ -7,9 +7,12 @@ class BasePage:
         self.page = page
 
     def click(self, locator: str):
+        logger.info(f"Clicking on {locator}")
         self.page.locator(locator).click()
 
+
     def fill(self, locator: str, value: str):
+        logger.info(f"Entering value in {locator}")
         self.page.locator(locator).fill(value)
 
     def get_text(self, locator: str):
@@ -23,3 +26,4 @@ class BasePage:
 
     def screenshot(self, name: str):
         self.page.screenshot(path=f"screenshots/{name}.png")
+
