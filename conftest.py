@@ -4,14 +4,12 @@ from playwright.sync_api import sync_playwright
 from utils.config import BASE_URL, HEADLESS
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def page():
 
-    with sync_playwright() as playwright:
+    with sync_playwright() as p:
 
-        browser = playwright.chromium.launch(
-            headless=HEADLESS
-        )
+        browser = p.chromium.launch(headless=HEADLESS)
 
         context = browser.new_context()
 
@@ -22,5 +20,4 @@ def page():
         yield page
 
         context.close()
-
         browser.close()

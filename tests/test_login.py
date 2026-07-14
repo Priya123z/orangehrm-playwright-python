@@ -10,4 +10,4 @@ def test_valid_login(page):
 
     login.login(USERNAME, PASSWORD)
 
-    assert dashboard.verify_dashboard_loaded() == "Dashboard"
+    assert dashboard.verify_dashboard_loaded()

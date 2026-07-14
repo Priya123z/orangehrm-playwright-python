@@ -1,34 +1,25 @@
-from playwright.sync_api import expect
+from playwright.sync_api import Page, expect
 
 
 class BasePage:
 
-    def __init__(self, page):
+    def __init__(self, page: Page):
         self.page = page
 
-    def click(self, locator):
+    def click(self, locator: str):
         self.page.locator(locator).click()
 
-    def fill(self, locator, text):
-        self.page.locator(locator).fill(text)
+    def fill(self, locator: str, value: str):
+        self.page.locator(locator).fill(value)
 
-    def type(self, locator, text):
-        self.page.locator(locator).fill(text)
-
-    def get_text(self, locator):
+    def get_text(self, locator: str):
         return self.page.locator(locator).text_content()
 
-    def is_visible(self, locator):
+    def is_visible(self, locator: str):
         return self.page.locator(locator).is_visible()
 
-    def wait_for_page_load(self):
-        self.page.wait_for_load_state("networkidle")
+    def wait_for_element(self, locator: str):
+        expect(self.page.locator(locator)).to_be_visible()
 
-    def verify_title(self, title):
-        expect(self.page).to_have_title(title)
-
-    def verify_url_contains(self, value):
-        expect(self.page).to_have_url(lambda url: value in url)
-
-    def take_screenshot(self, name):
+    def screenshot(self, name: str):
         self.page.screenshot(path=f"screenshots/{name}.png")
