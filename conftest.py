@@ -1,3 +1,5 @@
+from tracemalloc import Snapshot
+
 import pytest
 from playwright.sync_api import sync_playwright
 from utils.logger import logger
@@ -17,6 +19,8 @@ def page():
 
         logger.info("Opening New Page")
 
+        context.tracing.start(screenshots=True,snapshots=True)
+
         page = context.new_page()
 
         logger.info("Navigating to Login Page")
@@ -26,6 +30,8 @@ def page():
         yield page
 
         logger.info("Closing Browser")
+
+        context.tracing.stop(path="trace.zip")
 
         context.close()
         browser.close()

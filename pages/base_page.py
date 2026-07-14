@@ -1,3 +1,5 @@
+import re
+
 from playwright.sync_api import Page, expect
 from loguru import logger
 
@@ -31,3 +33,10 @@ class BasePage:
         logger.info(f"Saving screenshot {name}")
         self.page.screenshot(path=f"screenshots/{name}.png")
 
+    def wait_for_url_pattern(self,pattern:str):
+        logger.info(f"Waiting for URL Matching {pattern}")
+        expect(self.page).to_have_url(re.compile(pattern))
+
+    def wait_for_exact_url(self,url:str):
+        logger.info(f"Waiting for exact URL {url}")
+        expect(self.page).to_have_url(url)

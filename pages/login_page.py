@@ -1,3 +1,5 @@
+import re
+
 from pages.base_page import BasePage
 
 from utils.logger import logger
@@ -14,3 +16,5 @@ class LoginPage(BasePage):
         self.fill(self.PASSWORD, password)
         self.click(self.LOGIN_BUTTON)
         logger.info("Login Submitted")
+        self.wait_for_url_pattern(r".*/dashboard/.*")
+        logger.info("Login successful")
