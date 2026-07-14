@@ -16,10 +16,8 @@ print(f"ENV Exists   : {ENV_PATH.exists()}")
 load_dotenv(dotenv_path=ENV_PATH)
 
 BASE_URL = os.getenv("BASE_URL")
-USERNAME = os.getenv("USERNAME")
-PASSWORD = os.getenv("PASSWORD")
 HEADLESS = os.getenv("HEADLESS", "False").lower() == "true"
 TIMEOUT = int(os.getenv("TIMEOUT", "30000"))
+BROWSER = os.getenv("BROWSER","chromium")
 
 print(f"BASE_URL = {BASE_URL}")
-print(f"USERNAME = {USERNAME}")

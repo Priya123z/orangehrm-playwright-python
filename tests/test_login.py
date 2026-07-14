@@ -1,13 +1,22 @@
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
-from utils.config import USERNAME, PASSWORD
+from utils.csv_reader import csvReader
+import pytest
 
+users = csvReader.read_csv("test_data/valid_login.csv")
 
-def test_valid_login(page):
+@pytest.mark.parametrize(
+    "user",
+    users,
+    ids=[f"{user}['username']_{index}" for user,index in users]
+)
+def test_valid_login(page, user):
+    login_page = LoginPage(page)
+    dashboard_page = DashboardPage(page)
 
-    login = LoginPage(page)
-    dashboard = DashboardPage(page)
+    login_page.login(
+        user["username"],
+        user["password"]
+    )
 
-    login.login(USERNAME, PASSWORD)
-
-    dashboard.verify_dashboard_loaded()
+    dashboard_page.verify_dashboard_loaded()
