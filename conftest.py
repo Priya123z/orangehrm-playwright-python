@@ -2,7 +2,7 @@ import pytest
 from playwright.sync_api import sync_playwright
 from utils.logger import logger
 from utils.config import BASE_URL, HEADLESS
-
+from utils.screenshot import Screenshot
 
 @pytest.fixture
 def page():
@@ -31,3 +31,18 @@ def page():
         browser.close()
 
         logger.info("Browser Closed")
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+
+    outcome = yield
+
+    report = outcome.get_result()
+
+    if report.when == "call" and report.failed:
+
+        page = item.funcargs.get("page")
+
+        if page:
+
+            Screenshot.capture(page, item.name)
