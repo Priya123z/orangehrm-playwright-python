@@ -3,8 +3,7 @@
 __pycache__/
 .pytest_cache/
 
-.env
-
+config/
 playwright-report/
 test-results/
 allure-results/

@@ -6,15 +6,17 @@ from utils.logger import logger
 
 class LoginPage(BasePage):
 
-    USERNAME = "input[name='username']"
-    PASSWORD = "input[name='password']"
-    LOGIN_BUTTON = "button[type='submit']"
+    def __init__(self,page):
+        super().__init__(page)
+        self._USERNAME = page.locator("input[name='username']")
+        self._PASSWORD = page.locator("input[name='password']")
+        self._LOGIN_BUTTON = page.locator("button[type='submit']")
 
     def login(self, username, password):
         logger.info("Performing login")
-        self.fill(self.USERNAME, username)
-        self.fill(self.PASSWORD, password)
-        self.click(self.LOGIN_BUTTON)
+        self.fill(self._USERNAME, username)
+        self.fill(self._PASSWORD,password)
+        self.click(self._LOGIN_BUTTON)
         logger.info("Login Submitted")
         self.wait_for_url_pattern(r".*/dashboard/.*")
         logger.info("Login successful")

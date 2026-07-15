@@ -1,6 +1,6 @@
 import re
-
-from playwright.sync_api import Page, expect
+import datetime
+from playwright.sync_api import Page, expect, Locator
 from loguru import logger
 
 class BasePage:
@@ -8,35 +8,71 @@ class BasePage:
     def __init__(self, page: Page):
         self.page = page
 
-    def click(self, locator: str):
-        logger.info(f"Clicking on {locator}")
-        self.page.locator(locator).click()
+    def _execute_action(self, action, operation: str, target: str|None = None):
+        logger.info(f"{operation}: {target}")
+        try:
+            result = action()
+            logger.info(f"Successfully completed {operation} on {target}")
+            return result
+        except Exception as e:
+            logger.exception(f"Failed {operation} on {target}")
+            self.screenshot(f"Failed {operation}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}")
+            raise
+
+    def click(self, locator:Locator):
+        self.wait_for_visibility(locator)
+        return self._execute_action(
+            action=lambda: locator.click(),
+            operation="Click",
+            target=locator
+        )
+
+    def fill(self, locator:Locator, value: str):
+        return self._execute_action(
+            action=lambda:locator.fill(value),
+            operation="Fill",
+            target=locator,
+        )
+
+    def get_text(self, locator:Locator):
+        return self._execute_action(
+            action=lambda: locator.text_content(),
+            operation="Get Text",
+            target=locator
+        )
 
 
-    def fill(self, locator: str, value: str):
-        logger.info(f"Entering value in {locator}")
-        self.page.locator(locator).fill(value)
+    def is_visible(self, locator:Locator):
+        return self._execute_action(
+            action=lambda: locator.is_visible(),
+            operation="Is Visible",
+            target=locator
+        )
 
-    def get_text(self, locator: str):
-        logger.info(f"Reading text from locator: {locator}")
-        return self.page.locator(locator).text_content()
+    def wait_for_visibility(self, locator:Locator):
 
-    def is_visible(self, locator: str):
-        logger.info(f"Checking if the {locator} is visible ")
-        return self.page.locator(locator).is_visible()
-
-    def wait_for_element(self, locator: str):
-        logger.info(f"Waiting for {locator} to be visible")
-        expect(self.page.locator(locator)).to_be_visible()
+        return self._execute_action(
+            action=lambda:expect(locator).to_be_visible(),
+            operation="Wait for Visible",
+            target=locator
+        )
 
     def screenshot(self, name: str):
         logger.info(f"Saving screenshot {name}")
         self.page.screenshot(path=f"screenshots/{name}.png")
 
     def wait_for_url_pattern(self,pattern:str):
-        logger.info(f"Waiting for URL Matching {pattern}")
-        expect(self.page).to_have_url(re.compile(pattern))
+
+        return self._execute_action(
+            action=lambda: expect(self.page).to_have_url(re.compile(pattern)),
+            operation="Wait for URL pattern",
+            target=None
+        )
 
     def wait_for_exact_url(self,url:str):
-        logger.info(f"Waiting for exact URL {url}")
-        expect(self.page).to_have_url(url)
+        def wait_for_exact_url(self, url: str):
+            return self._execute_action(
+                action=lambda: expect(self.page).to_have_url(url),
+                operation="Wait for Exact URL",
+                target=None
+            )

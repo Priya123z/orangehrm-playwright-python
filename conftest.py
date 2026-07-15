@@ -1,17 +1,16 @@
-from tracemalloc import Snapshot
 
 import pytest
 from playwright.sync_api import sync_playwright
-from utils.logger import logger
-from utils.config import BASE_URL, HEADLESS
-from utils.screenshot import Screenshot
 
+from utils.browser_factory import BrowserFactory
+from utils.logger import logger
+from utils.screenshot import Screenshot
+from utils.config_manager import config
 @pytest.fixture
-def page():
+def page(request):
 
     with sync_playwright() as p:
-
-        browser = p.chromium.launch(headless=HEADLESS)
+        browser = BrowserFactory.create_browser(playwright =p ,config=config)
 
         logger.info("Launching Browser")
 
@@ -25,7 +24,7 @@ def page():
 
         logger.info("Navigating to Login Page")
 
-        page.goto(BASE_URL)
+        page.goto(config.base_url)
 
         yield page
 
@@ -52,3 +51,10 @@ def pytest_runtest_makereport(item, call):
         if page:
 
             Screenshot.capture(page, item.name)
+def pytest_addoption(parser):
+    parser.addoption(
+        "--browser",
+        action="store",
+        default="chromium",
+        help="Browser to execute tests"
+    )
