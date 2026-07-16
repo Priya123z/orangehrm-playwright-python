@@ -1,12 +1,13 @@
 from loguru import logger
 import os
+from utils.artifact_manager import artifact
 
 os.makedirs("logs", exist_ok=True)
 
 logger.remove()
 
 logger.add(
-    "logs/framework.log",
+    artifact.logs_dir / "framework.log",
     rotation="10 MB",
     retention="10 days",
     level="INFO",

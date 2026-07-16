@@ -1,14 +1,18 @@
-from datetime import datetime
+from playwright.sync_api import Page
+from utils.artifact_manager import artifact
+from utils.file_utils import FileUtils
 
 
 class Screenshot:
 
     @staticmethod
-    def capture(page, test_name):
+    def capture(page:Page, name:str):
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_name = FileUtils.sanitize_filename(name)
 
-        page.screenshot(
-            path=f"screenshots/{test_name}_{timestamp}.png"
-        )
-        
+        path=artifact.screenshot_dir/f"{safe_name}.png"
+
+        page.screenshot(path=path)
+
+
+
