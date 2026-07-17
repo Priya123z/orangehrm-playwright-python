@@ -14,9 +14,9 @@ class LoginPage(BasePage):
 
     def login(self, username, password):
         logger.info("Performing login")
-        self.fill(self._USERNAME, username)
-        self.fill(self._PASSWORD,password)
-        self.click(self._LOGIN_BUTTON)
+        self.fill(self._USERNAME, username,"username")
+        self.fill(self._PASSWORD,password,"password")
+        self.click(self._LOGIN_BUTTON,"login button")
         logger.info("Login Submitted")
-        self.wait_for_url_pattern(r".*/dashboard/.*")
+        self.wait_for_url_pattern(r".*/dashboard/.*","Dashboard title")
         logger.info("Login successful")

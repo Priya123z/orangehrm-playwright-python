@@ -10,7 +10,7 @@ class Screenshot:
 
         safe_name = FileUtils.sanitize_filename(name)
 
-        path=artifact.screenshot_dir/f"{safe_name}.png"
+        path=artifact.screenshots_dir/f"{safe_name}.png"
 
         page.screenshot(path=path)
 
