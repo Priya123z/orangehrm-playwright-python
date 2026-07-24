@@ -18,5 +18,6 @@ class LoginPage(BasePage):
         self.fill(self._PASSWORD,password,"password")
         self.click(self._LOGIN_BUTTON,"login button")
         logger.info("Login Submitted")
+        print(self.get_current_url())
         self.wait_for_url_pattern(r".*/dashboard/.*","Dashboard title")
         logger.info("Login successful")

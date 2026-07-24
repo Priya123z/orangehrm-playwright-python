@@ -8,7 +8,7 @@ class ConfigManager:
 
     _instance = None
 
-    def __new__(cls, env="qa"):
+    def __new__(cls):
 
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -41,7 +41,7 @@ class ConfigManager:
                 f"Environment configuration file not found: {env_file}"
             )
 
-        load_dotenv(env_file)
+        load_dotenv(env_file,override=True)
 
     def _read_configuration(self):
 
@@ -51,7 +51,9 @@ class ConfigManager:
 
         self.headless = os.getenv("HEADLESS")
 
-        self.timeout = os.getenv("TIMEOUT")
+        self.timeout = os.getenv("DEFAULT_TIMEOUT")
+
+        self.expect_timeout = os.getenv("EXPECT_TIMEOUT")
 
     def _validate_configuration(self):
 
@@ -97,5 +99,24 @@ class ConfigManager:
             raise ValueError(
                 f"Unsupported browser: {self.browser}"
             )
+        if not self.expect_timeout:
+            raise ValueError(
+                "EXPECT_TIMEOUT is missing."
+            )
+
+        try:
+            self.expect_timeout = int(self.expect_timeout)
+        except ValueError:
+            raise ValueError(
+                "EXPECT_TIMEOUT must be an integer."
+            )
+
+        if self.expect_timeout <= 0:
+            raise ValueError(
+                "EXPECT_TIMEOUT must be greater than zero."
+            )
+
+
+
 
 config = ConfigManager()

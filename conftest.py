@@ -14,10 +14,10 @@ from utils.config_manager import config
 
 @pytest.fixture(scope="session")
 def playwright():
-    logger.info("Starting Playwight engine")
+    logger.info("Starting Playwright engine")
     with sync_playwright() as p:
         yield p
-    logger.info("Stopping Playwight engine")
+    logger.info("Stopping Playwright engine")
 
 
 @pytest.fixture(scope="session")
@@ -125,6 +125,7 @@ def pytest_runtest_makereport(item, call):
         if page:
 
             Screenshot.capture(page, item.name)
+
 def pytest_addoption(parser):
     parser.addoption(
         "--browser",

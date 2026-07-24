@@ -65,14 +65,14 @@ class AuthManager:
         finally:
             context.close()
 
-    def _delete_storage_state(self, role: str):
-        """
-        Deletes a single storage state.
-        """
-        storage_state = self._storage_state_path(role)
-
-        if storage_state.exists():
-            storage_state.unlink()
+    # def _delete_storage_state(self, role: str):
+    #     """
+    #     Deletes a single storage state.
+    #     """
+    #     storage_state = self._storage_state_path(role)
+    #
+    #     if storage_state.exists():
+    #         storage_state.unlink()
 
     def clear_all_storage_states(self):
         """

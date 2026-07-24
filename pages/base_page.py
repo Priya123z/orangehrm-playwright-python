@@ -3,6 +3,9 @@ import datetime
 from playwright.sync_api import Page, expect, Locator
 from loguru import logger
 
+from utils.config_manager import config
+
+
 class BasePage:
 
     def __init__(self, page: Page):
@@ -57,6 +60,13 @@ class BasePage:
             description= description
         )
 
+    def get_current_url(self):
+        return self._execute_action(
+            action=lambda: self.page.url,
+            operation="Get Current URL",
+            description="Current Browser URL"
+        )
+
     def screenshot(self, name: str):
         logger.info(f"Saving screenshot {name}")
         self.page.screenshot(path=f"screenshots/{name}.png")
@@ -64,7 +74,7 @@ class BasePage:
     def wait_for_url_pattern(self,pattern:str,description):
 
         return self._execute_action(
-            action=lambda: expect(self.page).to_have_url(re.compile(pattern)),
+            action=lambda: expect(self.page).to_have_url(re.compile(pattern),timeout=config.expect_timeout),
             operation="Wait for URL pattern",
             description= description
         )

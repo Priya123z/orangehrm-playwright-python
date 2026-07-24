@@ -1,14 +1,22 @@
+from pathlib import Path
+
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
-from utils.csv_reader import csvReader
 import pytest
 
-users = csvReader.read_csv("test_data/valid_login.csv")
+from utils.test_data import TestData
+
+filepath = Path(__file__).parent.parent.resolve()
 
 @pytest.mark.parametrize(
     "user",
-    users,
-    ids=[f"{user}['username']_{index}" for user,index in users]
+    TestData.load(
+        filepath/"test_data"/"valid_login.csv",
+        filters={
+            "Execute": "Yes"
+        },
+        id_field="username"
+    )
 )
 def test_valid_login(page, user):
     login_page = LoginPage(page)
@@ -18,5 +26,4 @@ def test_valid_login(page, user):
         user["username"],
         user["password"]
     )
-
     dashboard_page.verify_dashboard_loaded()
